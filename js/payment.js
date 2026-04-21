@@ -169,23 +169,26 @@ function showSuccessScreen(barcode) {
 function drawBarcode(text) {
   const canvas = document.getElementById('barcodeCanvas');
   if (!canvas || !text) return;
-  const ctx  = canvas.getContext('2d');
-  const W    = canvas.width  = 240;
-  const H    = canvas.height = 60;
+
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width = 240;
+  const H = canvas.height = 60;
+
+  // background (same as yours)
   ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = '#1a1a2e';
-  // Simple visual bars derived from char codes
-  const chars = text.replace(/[^A-Z0-9]/g, '');
-  const barW  = Math.floor(W / (chars.length * 4 + 4));
-  let x = barW * 2;
-  for (const ch of chars) {
-    const code = ch.charCodeAt(0);
-    const pattern = (code & 0b11111).toString(2).padStart(5, '0');
-    for (const bit of pattern) {
-      if (bit === '1') ctx.fillRect(x, 4, barW, H - 8);
-      x += barW + 1;
-    }
-    x += barW; // gap between chars
-  }
+
+  // sanitize input (same idea as yours but better)
+  const chars = text.replace(/[^A-Za-z0-9]/g, '');
+
+  // REAL barcode generation (replaces fake pattern logic)
+  JsBarcode(canvas, chars, {
+    format: "CODE128",
+    width: 1.8,        // similar density to your barW idea
+    height: H - 10,    // matches your margin logic
+    margin: 5,
+    displayValue: false,
+    background: "#ffffff",
+    lineColor: "#1a1a2e" // same color you used
+  });
 }
