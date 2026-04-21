@@ -179,10 +179,10 @@ function drawBarcode(text) {
   ctx.fillRect(0, 0, W, H);
 
   // sanitize input (same idea as yours but better)
-  const chars = text.replace(/[^A-Za-z0-9]/g, '');
+ // const chars = text.replace(/[^A-Za-z0-9]/g, '');
 
   // REAL barcode generation (replaces fake pattern logic)
-  JsBarcode(canvas, chars, {
+  JsBarcode(canvas, text, {
     format: "CODE128",
     width: 1.8,        // similar density to your barW idea
     height: H - 10,    // matches your margin logic
