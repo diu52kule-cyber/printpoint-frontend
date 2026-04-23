@@ -177,7 +177,7 @@ function drawBarcode(text) {
   // Background
   ctx.fillStyle = '#FFF';
   ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = '#1a1a2e';
+  ctx.fillStyle = '#000000';
 
   // Code128 patterns (subset, enough for ASCII)
   const CODE128 = [
