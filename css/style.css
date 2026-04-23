@@ -187,7 +187,7 @@ input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;b
 #succ h2{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--dark);margin-bottom:9px;}
 #succ p{color:var(--sub);font-size:14px;line-height:1.6;max-width:280px;}
 .codebox{background:transparent;border-radius:16px;padding:20px 24px;margin:20px 0;text-align:center;}
-.codebox canvas{border-radius:6px;background:white;display:block;margin:0;}
+.codebox canvas{border-radius:6px;background:white;display:block;margin:0 auto 8px;}
 .bcode-text{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;color:#888;letter-spacing:4px;margin-bottom:6px;}
 .cl{font-size:10px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
 .cv{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;letter-spacing:6px;color:var(--red);}
