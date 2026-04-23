@@ -234,7 +234,7 @@ function drawBarcode(text) {
   const totalBars = pattern.length;
   const barW = (W-10) / totalBars;
 
-  let x = 0;
+  let x = 5;
   for (let i = 0; i < totalBars; i++) {
     if (pattern[i] === '1') {
       ctx.fillRect(x, 5, barW, H - 10);
