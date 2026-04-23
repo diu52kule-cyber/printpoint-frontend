@@ -171,13 +171,13 @@ function drawBarcode(text) {
   if (!canvas || !text) return;
 
   const ctx = canvas.getContext('2d');
-  const W = canvas.width = 240;
+  const W = canvas.width = 230;
   const H = canvas.height = 60;
 
   // Background
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#FFFFFF00';
   ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = '#1a1a2e';
+  ctx.fillStyle = '#000000';
 
   // Code128 patterns (subset, enough for ASCII)
   const CODE128 = [
