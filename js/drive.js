@@ -1,18 +1,26 @@
 /** js/drive.js */
 
-let _tokenClient = null, _searchTimer = null, _authRetryTimer = null;
+const MAX_AUTH_INIT_RETRIES = 20;
+const AUTH_INIT_RETRY_DELAY_MS = 500;
+
+let _tokenClient = null, _searchTimer = null, _authRetryTimer = null, _authRetryPending = false;
 
 function hasGoogleClientId() {
   return !!CONFIG.GOOGLE_CLIENT_ID &&
     CONFIG.GOOGLE_CLIENT_ID !== 'YOUR_CLIENT_ID.apps.googleusercontent.com';
 }
 
-function initGoogleAuth(retriesLeft = 20) {
+function initGoogleAuth(retriesLeft = MAX_AUTH_INIT_RETRIES) {
   if (_tokenClient || !hasGoogleClientId()) return;
   if (typeof google === 'undefined' || !google.accounts?.oauth2) {
     if (retriesLeft <= 0) return;
+    if (_authRetryPending) return;
     clearTimeout(_authRetryTimer);
-    _authRetryTimer = setTimeout(() => initGoogleAuth(retriesLeft - 1), 500);
+    _authRetryPending = true;
+    _authRetryTimer = setTimeout(() => {
+      _authRetryPending = false;
+      initGoogleAuth(retriesLeft - 1);
+    }, AUTH_INIT_RETRY_DELAY_MS);
     return;
   }
   _tokenClient = google.accounts.oauth2.initTokenClient({
