@@ -3,7 +3,10 @@
 const MAX_AUTH_INIT_RETRIES = 20;
 const AUTH_INIT_RETRY_DELAY_MS = 500;
 
-let _tokenClient = null, _searchTimer = null, _authRetryTimer = null, _authRetryPending = false;
+let _tokenClient = null;
+let _authRetryTimer = null;
+let _authRetryPending = false;
+let _searchTimer = null;
 
 function hasGoogleClientId() {
   return !!CONFIG.GOOGLE_CLIENT_ID &&
@@ -54,7 +57,8 @@ function renderDriveAuth() {
   document.getElementById('gSignInBtn').addEventListener('click', () => {
     if (!hasGoogleClientId()) { showToast('Set GOOGLE_CLIENT_ID in config.js', 'r'); return; }
     initGoogleAuth();
-    if (!_tokenClient) { showToast('Google Sign-In is still loading, try again', 'r'); return; }
+    if (_authRetryPending) { showToast('Google Sign-In is still loading, try again', 'r'); return; }
+    if (!_tokenClient) { showToast('Google Sign-In unavailable right now, try again', 'r'); return; }
     _tokenClient.requestAccessToken({ prompt: 'consent' });
   });
 }
