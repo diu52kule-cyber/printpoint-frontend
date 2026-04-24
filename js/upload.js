@@ -41,8 +41,29 @@ async function buildFileEntry(file) {
       entry.selectedPages = entry.totalPages;
       await buildThumbs(entry);
     } catch (e) { console.warn('PDF parse:', e); }
+  } else if (type === 'DOCX') {
+    try {
+      const pageCount = await getDocxPageCount(file);
+      entry.totalPages    = pageCount;
+      entry.selectedPages = pageCount;
+    } catch (e) { console.warn('DOCX parse:', e); }
+  } else if (type === 'DOC') {
+    // Legacy binary format — page count cannot be extracted client-side
+    entry.totalPages    = 1;
+    entry.selectedPages = 1;
   }
   return entry;
+}
+
+async function getDocxPageCount(file) {
+  if (typeof JSZip === 'undefined') return 1;
+  const zip    = await JSZip.loadAsync(file);
+  const appXml = zip.file('docProps/app.xml');
+  if (!appXml) return 1;
+  const xml   = await appXml.async('string');
+  const match = xml.match(/<Pages>(\d+)<\/Pages>/i);
+  const parsed = parseInt(match ? match[1] : '', 10);
+  return (parsed > 0) ? parsed : 1;
 }
 
 async function buildThumbs(entry) {
@@ -67,7 +88,7 @@ function renderFileList() {
     list.innerHTML = '';
     document.getElementById('dropZone').style.cssText = '';
     document.getElementById('dtxt').textContent = 'Tap to upload files';
-    document.getElementById('dsub').textContent = 'PDF, JPG, PNG — up to 10 files';
+    document.getElementById('dsub').textContent = 'PDF, JPG, PNG, DOCX, DOC — up to 10 files';
     return;
   }
 
@@ -77,7 +98,7 @@ function renderFileList() {
 
   list.innerHTML = S.files.map((f, i) => `
     <div class="fitem ${i === S.activeFileIdx ? 'factive' : ''}" data-idx="${i}">
-      <div class="fitem-ico">${f.type === 'PDF' ? '📄' : '🖼️'}</div>
+      <div class="fitem-ico">${f.type === 'PDF' ? '📄' : (f.type === 'DOCX' || f.type === 'DOC') ? '📝' : '🖼️'}</div>
       <div class="fitem-info">
         <span class="fitem-name">${esc(f.name)}</span>
         <span class="fitem-sub">${f.sizeMB} MB · ${f.totalPages} page${f.totalPages !== 1 ? 's' : ''}</span>

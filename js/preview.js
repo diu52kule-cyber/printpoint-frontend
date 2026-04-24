@@ -57,7 +57,9 @@ async function renderPage() {
   canvas.style.display = 'block';
   canvas.style.cssText = 'display:block;position:absolute;top:0;left:0;';
 
-  if (f.type !== 'PDF' || !f.pdfDoc) {
+  if (f.type === 'DOCX' || f.type === 'DOC') {
+    renderWordPlaceholder(canvas, f);
+  } else if (f.type !== 'PDF' || !f.pdfDoc) {
     await renderImageFile(canvas, f.file);
   } else {
     await renderPDFPage(canvas, f.pdfDoc);
@@ -78,6 +80,57 @@ async function renderPDFPage(canvas, pdfDoc) {
     canvas.style.top  = Math.max(0, (S._paH - vp.height) / 2) + 'px';
     await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
   } catch (e) { console.error('[renderPDF]', e); }
+}
+
+function renderWordPlaceholder(canvas, f) {
+  const w = Math.round(S._paW) || 300;
+  const h = Math.round(S._paH) || 400;
+  canvas.width  = w;
+  canvas.height = h;
+  canvas.style.left = '0px';
+  canvas.style.top  = '0px';
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = S.colorMode === 'bw' ? '#f4f4f4' : '#eef3fb';
+  ctx.fillRect(0, 0, w, h);
+
+  // Word "W" badge
+  const badgeR = Math.min(w, h) * 0.14;
+  const cx = w / 2, cy = h / 2 - badgeR * 0.6;
+  ctx.fillStyle = S.colorMode === 'bw' ? '#555' : '#2b579a';
+  ctx.beginPath();
+  ctx.arc(cx, cy, badgeR, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.font = `bold ${Math.round(badgeR * 1.1)}px sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('W', cx, cy);
+
+  ctx.fillStyle = '#444';
+  ctx.font = `${Math.round(Math.min(w, h) * 0.042)}px sans-serif`;
+  ctx.textBaseline = 'alphabetic';
+  const nameY = cy + badgeR + Math.round(Math.min(w, h) * 0.08);
+  const maxW  = w * 0.85;
+  let displayName = f.name;
+  if (ctx.measureText(displayName).width > maxW) {
+    while (displayName.length > 5 && ctx.measureText(displayName + '…').width > maxW) {
+      displayName = displayName.slice(0, -1);
+    }
+    displayName += '…';
+  }
+  ctx.fillText(displayName, cx, nameY);
+
+  ctx.fillStyle = '#888';
+  ctx.font      = `${Math.round(Math.min(w, h) * 0.036)}px sans-serif`;
+  ctx.fillText(
+    `Page ${S.currentPage} of ${f.selectedPages || f.totalPages} · ${f.totalPages} page${f.totalPages !== 1 ? 's' : ''} total`,
+    cx, nameY + Math.round(Math.min(w, h) * 0.07)
+  );
+
+  ctx.fillStyle = '#bbb';
+  ctx.font      = `${Math.round(Math.min(w, h) * 0.032)}px sans-serif`;
+  ctx.fillText('Word document — preview not available', cx, nameY + Math.round(Math.min(w, h) * 0.13));
 }
 
 function renderImageFile(canvas, file) {
@@ -153,7 +206,7 @@ function renderFileTabs() {
   tabs.style.display = 'flex';
   tabs.innerHTML = S.files.map((f, i) => `
     <button class="ftab ${i === S.activeFileIdx ? 'active' : ''}" data-idx="${i}">
-      ${f.type === 'PDF' ? '📄' : '🖼️'} ${esc(f.name.length > 12 ? f.name.slice(0, 12) + '…' : f.name)}
+      ${f.type === 'PDF' ? '📄' : (f.type === 'DOCX' || f.type === 'DOC') ? '📝' : '🖼️'} ${esc(f.name.length > 12 ? f.name.slice(0, 12) + '…' : f.name)}
     </button>`).join('');
   tabs.querySelectorAll('.ftab').forEach(btn =>
     btn.addEventListener('click', async () => {
