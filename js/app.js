@@ -71,7 +71,7 @@ function resetApp() {
   document.getElementById('nxt1').disabled = true;
   document.getElementById('dropZone').style.cssText = '';
   document.getElementById('dtxt').textContent = 'Tap to upload files';
-  document.getElementById('dsub').textContent = 'PDF, JPG, PNG — up to 10 files';
+  document.getElementById('dsub').textContent = 'PDF, JPG, PNG, DOCX, DOC — up to 10 files';
   document.getElementById('fileList').innerHTML = '';
   document.getElementById('colorSel').value  = 'bw';
   document.getElementById('paperSel').value  = 'A4';

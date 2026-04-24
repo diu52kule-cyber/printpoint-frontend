@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="css/style.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb" crossorigin="anonymous"></script>
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
@@ -37,12 +38,12 @@
       <div class="ptitle"><span>1</span>Upload Files</div>
 
       <div class="uzone" id="dropZone">
-        <input type="file" id="fileIn" accept=".pdf,.jpg,.jpeg,.png" multiple/>
+        <input type="file" id="fileIn" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" multiple/>
         <div class="uico">
           <svg viewBox="0 0 24 24" fill="none" stroke="#E8394A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
         </div>
         <h3 id="dtxt">Tap to upload files</h3>
-        <p id="dsub">PDF, JPG, PNG — up to 10 files</p>
+        <p id="dsub">PDF, JPG, PNG, DOCX, DOC — up to 10 files</p>
       </div>
 
       <!-- Selected files list -->
