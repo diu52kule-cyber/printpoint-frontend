@@ -97,7 +97,7 @@ async function uploadFilesToBackend() {
     orientation:   S.orientation,
     scale:         S.scale,
     margins:       S.margins,
-    selectedPages: activeFile()?.selectedPages,
+    selectedPages: totalSelectedPages(),
   };
   form.append('settings', JSON.stringify(settings));
 
