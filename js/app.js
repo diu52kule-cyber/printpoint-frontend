@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
       'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   }
 
-  // Init Google auth after GIS script loads
-  window.addEventListener('load', () => setTimeout(initGoogleAuth, 800));
+  // Init Google auth (with retry in drive.js for async GIS load)
+  initGoogleAuth();
+  window.addEventListener('load', initGoogleAuth);
 
   // ── Step 1 ────────────────────────────────────────────
   document.getElementById('fileIn').addEventListener('change', e => addFiles(e.target.files));

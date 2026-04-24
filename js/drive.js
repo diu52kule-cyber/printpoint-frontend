@@ -1,9 +1,31 @@
 /** js/drive.js */
 
-let _tokenClient = null, _searchTimer = null;
+const MAX_AUTH_INIT_RETRIES = 20;
+const AUTH_INIT_RETRY_DELAY_MS = 500;
 
-function initGoogleAuth() {
-  if (typeof google === 'undefined') return;
+let _tokenClient = null;
+let _authRetryTimer = null;
+let _authRetryPending = false;
+let _searchTimer = null;
+
+function hasGoogleClientId() {
+  return !!CONFIG.GOOGLE_CLIENT_ID &&
+    CONFIG.GOOGLE_CLIENT_ID !== 'YOUR_CLIENT_ID.apps.googleusercontent.com';
+}
+
+function initGoogleAuth(retriesLeft = MAX_AUTH_INIT_RETRIES) {
+  if (_tokenClient || !hasGoogleClientId()) return;
+  if (typeof google === 'undefined' || !google.accounts?.oauth2) {
+    if (retriesLeft <= 0) return;
+    if (_authRetryPending) return;
+    clearTimeout(_authRetryTimer);
+    _authRetryPending = true;
+    _authRetryTimer = setTimeout(() => {
+      _authRetryPending = false;
+      initGoogleAuth(retriesLeft - 1);
+    }, AUTH_INIT_RETRY_DELAY_MS);
+    return;
+  }
   _tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CONFIG.GOOGLE_CLIENT_ID,
     scope:     'https://www.googleapis.com/auth/drive.readonly',
@@ -33,7 +55,10 @@ function renderDriveAuth() {
       <p style="margin-top:10px;font-size:11px;color:#bbb">Set GOOGLE_CLIENT_ID in js/config.js</p>
     </div>`;
   document.getElementById('gSignInBtn').addEventListener('click', () => {
-    if (!_tokenClient) { showToast('Set GOOGLE_CLIENT_ID in config.js', 'r'); return; }
+    if (!hasGoogleClientId()) { showToast('Set GOOGLE_CLIENT_ID in config.js', 'r'); return; }
+    initGoogleAuth();
+    if (_authRetryPending) { showToast('Google Sign-In is still loading, try again', 'r'); return; }
+    if (!_tokenClient) { showToast('Google Sign-In unavailable right now, try again', 'r'); return; }
     _tokenClient.requestAccessToken({ prompt: 'consent' });
   });
 }
