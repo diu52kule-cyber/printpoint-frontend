@@ -1,4 +1,4 @@
-/* PrintPoint — style.css */
+/* NoCashVends — style.css */
 :root{--red:#E8394A;--red-l:#ffeaec;--red-m:#f7b8bd;--dark:#1a1a2e;--text:#2d2d3a;--sub:#8c8c9e;--bg:#f0f2f7;--white:#fff;--border:#e8e8f0;--green:#22c55e;--blue:#4285F4;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;}

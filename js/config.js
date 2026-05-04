@@ -8,8 +8,8 @@
 const CONFIG = {
   // ── Your Railway backend URL ──────────────────────────
   // Dev:  http://localhost:3000
-  // Prod: https://printpoint-backend-production.up.railway.app
-  BACKEND_URL: 'https://printpoint-backend-production.up.railway.app',
+  // Prod: https://nocashvends-backend-production.up.railway.app
+  BACKEND_URL: 'https://nocashvends-backend-production.up.railway.app',
 
   // ── Google OAuth Client ID ────────────────────────────
   // This is PUBLIC (not a secret). It only identifies your app to Google.

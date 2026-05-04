@@ -46,7 +46,7 @@ async function startPayment() {
       amount,
       currency,
       order_id:    orderId,
-      name:        'PrintPoint',
+      name:        'NoCashVends',
       description: `${S.files.length} file(s) · ${S.copies}× · ${S.colorMode === 'bw' ? 'B&W' : 'Color'}`,
       theme:       { color: '#E8394A' },
 
